@@ -1,5 +1,8 @@
 <?php
-require_once "util/utility.php";
+require_once "core/util/utility.php";
+require_once "controller/authcontroller.php";
+require_once "core/util/auth.php";
+
 class RestFul
 {
     public $RequestURI;
@@ -7,6 +10,7 @@ class RestFul
     public $Input;
     public $Routes;
     public $Id;
+    
     function __construct($routes)
     {
         $this->Routes = $routes;
@@ -20,6 +24,11 @@ class RestFul
         $this->Input['PUT']     = $_PUT;
         $this->Input['FILES'] = $_FILES;
        
+        $authControllre = new AuthController($this->Input);
+    //    if(!$authControllre->validateToken()){
+    //     $this->response(array("message" => "invalid token")); exit;
+    //    }
+
 //
 //print_r( $this->RequestURI);
         if ($this->RequestURI == "/") {
@@ -43,6 +52,10 @@ class RestFul
             // $ResourceName = end($ResourceName);
             require $this->RequestedRoute['resource'] . ".php";
             $ResourceObj = new $ResourceName($this);
+
+            $auth = new Auth();//todo
+            // $auth->generateToken(); exit;
+            $auth->validateToken(); exit;
                 
             switch ($this->RequestMethod) {
                 case "GET":
@@ -82,3 +95,4 @@ class RestFul
         echo json_encode(array("status" => 200, "data" => $data));
     }
 }
+
