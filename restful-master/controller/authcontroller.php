@@ -1,22 +1,20 @@
 <?php
-require_once "core/util/auth.php";
+
 class AuthController 
 {
-    public $auth ;
-    public function __construct()
+    public Auth $auth;
+    public function __construct($utiObj)
     {
-        $auth = new Auth();
+        $this->auth = new Auth($utiObj);
     }
 
-    
-
-    public function genrateToken()
+    public function getGenrateToken()
     {
         $this->auth->generateToken();
     }
 
-    public function validateToken(){
-       $this->auth->validateToken();
+    public function getValidateToken(){
+      return $this->auth->validateToken();
     }
 }
 ?>

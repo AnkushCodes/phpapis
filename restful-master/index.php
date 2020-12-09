@@ -7,8 +7,6 @@ class App extends RestFul{
     function __construct($data){
         parent::__construct($data);
     }
-    //.... code some thing else ... here
-    //... for your app....
 }
 
 

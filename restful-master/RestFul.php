@@ -14,49 +14,36 @@ class RestFul
     function __construct($routes)
     {
         $this->Routes = $routes;
-        parse_str(file_get_contents("php://input"), $_PUT);
-        // $this->RequestURI = str_replace("/index.php","",$_SERVER['REQUEST_URI']);
+        
         $this->RequestURI = Utility::getPathValue($_SERVER['REQUEST_URI']);
  
         $this->RequestMethod = $_SERVER['REQUEST_METHOD'];
-        $this->Input['GET']     = $_GET;
-        $this->Input['POST']    = $_POST;
-        $this->Input['PUT']     = $_PUT;
-        $this->Input['FILES'] = $_FILES;
-       
-        $authControllre = new AuthController($this->Input);
-    //    if(!$authControllre->validateToken()){
-    //     $this->response(array("message" => "invalid token")); exit;
-    //    }
+     
 
-//
-//print_r( $this->RequestURI);
         if ($this->RequestURI == "/") {
             foreach ($this->Routes as $key => $Route) {
                 echo $key . "<br>";
             }
         } else {
             $this->RequestedRoute = $this->Routes["/".$this->RequestURI[2] . "/" . $this->RequestURI[3]];
-           // $ResourceName = explode("/", $this->RequestedRoute['resource']);
-          //  print_r("/".$this->RequestURI[2] . "/" . $this->RequestURI[3]);
+    
             $ResourceName = $this->RequestURI[3];
             $tableName = (string)  $this->RequestURI[3];
-           //  print_r($this->RequestedRoute);
+            $utility = new Utility();
             if ($this->RequestURI[4] != null) {
-                $this->Id = (int) $this->RequestURI[4];
+                $utility->setId((int) $this->RequestURI[4]);
                
-            } else {
-              //  $id = null;
-            }
-            //print_r($this->RequestMethod);
-            // $ResourceName = end($ResourceName);
-            require $this->RequestedRoute['resource'] . ".php";
-            $ResourceObj = new $ResourceName($this);
+            } 
 
-            $auth = new Auth();//todo
-            // $auth->generateToken(); exit;
-            $auth->validateToken(); exit;
-                
+           
+            //  $authControllre = new AuthController($utility);
+            //  $authControllre->getValidateToken();
+
+           //  $authControllre->getGenrateToken(); exit;
+           
+            require $this->RequestedRoute['resource'] . ".php";
+            $ResourceObj = new $ResourceName($utility);
+
             switch ($this->RequestMethod) {
                 case "GET":
                     if ($this->RequestedRoute['get'] == true) {

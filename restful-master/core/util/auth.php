@@ -3,47 +3,17 @@ require_once "core/util/auth/JWT.php";
 class Auth
 {
     // private $aData;
-    // public function __construct($aData)
-    // {
-    //     $this->aData = $aData;
+    private $utilObj;
+    public function __construct($setUtilObj)
+    {
+        $this->utilObj = $setUtilObj;
+    }
 
-    // }
 
-		public function validateParameter($fieldName, $value, $dataType, $required = true) {
-			if($required == true && empty($value) == true) {
-				$this->throwError(VALIDATE_PARAMETER_REQUIRED, $fieldName . " parameter is required.");
-			}
-
-			switch ($dataType) {
-				case BOOLEAN:
-					if(!is_bool($value)) {
-						$this->throwError(VALIDATE_PARAMETER_DATATYPE, "Datatype is not valid for " . $fieldName . '. It should be boolean.');
-					}
-					break;
-				case INTEGER:
-					if(!is_numeric($value)) {
-						$this->throwError(VALIDATE_PARAMETER_DATATYPE, "Datatype is not valid for " . $fieldName . '. It should be numeric.');
-					}
-					break;
-
-				case STRING:
-					if(!is_string($value)) {
-						$this->throwError(VALIDATE_PARAMETER_DATATYPE, "Datatype is not valid for " . $fieldName . '. It should be string.');
-					}
-					break;
-				
-				default:
-					$this->throwError(VALIDATE_PARAMETER_DATATYPE, "Datatype is not valid for " . $fieldName);
-					break;
-			}
-
-			return $value;
-
-		}
-
-    public function generateToken() {
-        // $email = $this->validateParameter('email', $this->param['email'], STRING);
-        // $pass = $this->validateParameter('pass', $this->param['pass'], STRING);
+    public function generateToken()
+    {
+        // $email = $this->utilObj->validateParameter('email', $this->param['email'], STRING);
+        // $pass = $this->utilObj->validateParameter('pass', $this->param['pass'], STRING);
         try {
             // $stmt = $this->dbConn->prepare("SELECT * FROM users WHERE email = :email AND password = :pass");
             // $stmt->bindParam(":email", $email);
@@ -61,26 +31,27 @@ class Auth
             $paylod = [
                 'iat' => time(),
                 'iss' => 'localhost',
-                'exp' => time() + (60*60),
-                'userId' => '1' 
-               
+                'exp' => time() + (60 * 60),
+                'userId' => '1'
+
             ];
 
             $token = JWT::encode($paylod, SECRETE_KEY);
-            
+
             $data = ['token' => $token];
-         
-           $this->returnResponse(SUCCESS_RESPONSE, $data); // todo //
+
+            $this->utilObj->returnResponse(SUCCESS_RESPONSE, $data); // todo //
         } catch (Exception $e) {
-            $this->throwError(JWT_PROCESSING_ERROR, $e->getMessage());
+            $this->utilObj->throwError(JWT_PROCESSING_ERROR, $e->getMessage());
         }
     }
 
-    public function validateToken() {
+    public function validateToken()
+    {
         try {
             $token = $this->getBearerToken();
             $payload = JWT::decode($token, SECRETE_KEY, ['HS256']);
-
+            echo  $payload->userId;
             // $stmt = $this->dbConn->prepare("SELECT * FROM users WHERE id = :userId");
             // $stmt->bindParam(":userId", $payload->userId);
             // $stmt->execute();
@@ -95,12 +66,12 @@ class Auth
 
             $this->userId = $payload->userId;
         } catch (Exception $e) {
-            $this->throwError(ACCESS_TOKEN_ERRORS, $e->getMessage());
+            $this->utilObj->throwError(ACCESS_TOKEN_ERRORS, $e->getMessage());
         }
     }
 
 
-     /**
+    /**
      * get access token from header
      * */
     public function getBearerToken()
@@ -112,42 +83,32 @@ class Auth
                 return $matches[1];
             }
         }
-        $this->throwError(ATHORIZATION_HEADER_NOT_FOUND, 'Access Token Not found');
+        $this->utilObj->throwError(ATHORIZATION_HEADER_NOT_FOUND, 'Access Token Not found');
     }
 
 
     public function getAuthorizationHeader()
-    {       
+    {
+        $input = $this->utilObj->getInputHandel();
+
         $headers = null;
         if (isset($_SERVER['Authorization'])) {
-            $headers = trim($_SERVER["Authorization"]);
-        } else if (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
-            $headers = trim($_SERVER["HTTP_AUTHORIZATION"]);
-        } elseif (function_exists('apache_request_headers')) {
-            $requestHeaders = apache_request_headers();
+            $headers = trim($input["Authorization"]);
+            
+            print_r(1);
+        } else if (isset($input['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
+            $headers = trim($input["HTTP_AUTHORIZATION"]);
+            print_r(2);
+        } elseif ($input['is_apache_request_headers']) {
+            $requestHeaders = $input['apache_request_headers'];
+            print_r(3);
             // Server-side fix for bug in old Android versions (a nice side-effect of this fix means we don't care about capitalization for Authorization)
             $requestHeaders = array_combine(array_map('ucwords', array_keys($requestHeaders)), array_values($requestHeaders));
             if (isset($requestHeaders['Authorization'])) {
                 $headers = trim($requestHeaders['Authorization']);
+                print_r(4);
             }
         }
         return $headers;
-    }
-   
-
-    public function throwError($code, $message)
-    {
-        header("content-type: application/json");
-        $errorMsg = json_encode(['error' => ['status' => $code, 'message' => $message]]);
-        echo $errorMsg;
-        exit;
-    }
-
-    public function returnResponse($code, $data)
-    {
-        header("content-type: application/json");
-        $response = json_encode(['resonse' => ['status' => $code, "result" => $data]]);
-        echo $response;
-        exit;
     }
 }

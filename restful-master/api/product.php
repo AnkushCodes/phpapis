@@ -1,10 +1,24 @@
 <?php 
-class product extends PDO{
-    function __construct($data){
-        $this->Input = $data->Input;
+
+require_once "database/DB.php";
+
+class product {
+    private $Input;
+    private $uconn; 
+    function __construct(Utility $setUtilObj){
+       $this->Input = $setUtilObj->getInputHandel();
+      
+        $this->uconn = DB::getConnection();
+      
     }
     function doGet(){
-        return "Product get method called";
+        
+        $state = "SELECT * FROM products";
+    
+        $query = $this->uconn->prepare($state);
+   
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC);
     }
     function doPost(){
         return "Product Post method called";
@@ -16,4 +30,3 @@ class product extends PDO{
         return "Product Delete method called";
     }
 }
-?>
