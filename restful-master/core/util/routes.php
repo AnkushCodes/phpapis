@@ -18,6 +18,14 @@ static public function getRoutes()
             "put" => true,
             "delete" => true,
             "resource" => "api/product"
+        ),
+
+        "/api/login" => array(
+            "get" => true,
+            "post" => true,
+            "put" => true,
+            "delete" => true,
+            "resource" => "api/auth/login"
         ));
         
 }

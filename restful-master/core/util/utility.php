@@ -13,6 +13,9 @@ class Utility
 		$this->Input['POST']    = $_POST;
 		$this->Input['PUT']     = $_PUT;
 		$this->Input['FILES']   = $_FILES;
+		$handler = fopen('php://input', 'r');
+		$request = stream_get_contents($handler);
+		$this->Input['data'] = json_decode($request, true);
 
 		if (isset($_SERVER['Authorization']))     $this->Input['Authorization'] = $_SERVER['Authorization'];
 		if (isset($_SERVER['HTTP_AUTHORIZATION'])) $this->Input['HTTP_AUTHORIZATION']        = $_SERVER['HTTP_AUTHORIZATION'];
@@ -50,7 +53,7 @@ class Utility
 	public function returnResponse($code, $data)
 	{
 		header("content-type: application/json");
-		$response = json_encode(['resonse' => ['status' => $code, "result" => $data]]);
+		$response = json_encode(['response' => ['status' => $code, "result" => $data]]);
 		echo $response;
 		exit;
 	}

@@ -18,7 +18,6 @@ class RestFul
         $this->RequestURI = Utility::getPathValue($_SERVER['REQUEST_URI']);
  
         $this->RequestMethod = $_SERVER['REQUEST_METHOD'];
-     
 
         if ($this->RequestURI == "/") {
             foreach ($this->Routes as $key => $Route) {
