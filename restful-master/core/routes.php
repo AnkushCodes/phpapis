@@ -1,16 +1,24 @@
 <?php
 class Routes{
 
+//  static public funtion is(){
+
+//  }   
+
 static public function getRoutes()
 {
     // $Routes =
     return array(
-        "/api/user" => array(
+        "/api/auth" => array(
             "get" => true,
             "post" => true,
             "put" => true,
             "delete" => true,
-            "resource" => "api/user"
+            "resource" => "api/auth",
+            "function"=>[
+                "signup",
+                "gettoken"
+            ]
         ),
         "/api/product" => array(
             "get" => true,

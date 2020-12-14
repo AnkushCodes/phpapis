@@ -1,7 +1,7 @@
 <?php
 //config..
-define("_DB_","api");
-define("_DNS_","mysql:host=localhost;dbname="._DB_); //Database name and driver info
-define("_USER_","root"); 					     //database username
-define("_PASS_","PASS");					     //database password
+define("DB_NAME","api");
+define("DB_SERVER","mysql:host=localhost;dbname=".DB_NAME); //Database name and driver info
+define("DB_USERNAME","root"); 					     //database username
+define("DB_PASSWORD","PASS");					     //database password
 ?>

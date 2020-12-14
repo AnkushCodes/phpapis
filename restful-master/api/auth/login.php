@@ -5,11 +5,12 @@ class Login
 {
     private $Input;
     private $uconn;
+    private Utility $util;
     function __construct(Utility $setUtilObj)
     {
         $this->Input = $setUtilObj->getInputHandel();
         $this->uconn = DB::getConnection();
-        print_r($this->Input['POST']);
+        $this->util =  $setUtilObj;
     }
 
     function doGet()
@@ -24,21 +25,25 @@ class Login
     }
     function doPost()
     {
-        print_r('anc');
-        // $state = 'insert into login (email,password,active,created_on) values(:email,:password,1,:created_on)';
-        // $demail = $this->Input['POST']['email'];
-        // $dpassword = $this->Input['POST']['password'];
-        // $dcreated_on = $this->Input['POST']['created_on'];
-        // $query = $this->uconn->prepare($state);
-        // $query->bindParam(':email', $demail);
-        // $query->bindParam(':password', $dpassword);
-        // $query->bindParam(':created_on', $dcreated_on);
+        try{
+        $state = 'insert into login (email,password,active,created_on) values(:email,:password,1,:created_on)';
+        $demail = $this->Input['data']['email'];
+        $dpassword = $this->Input['data']['password'];
+        $dcreated_on = $this->Input['data']['created_on'];
+        $query = $this->uconn->prepare($state);
+        $query->bindParam(':email', $demail);
+        $query->bindParam(':password',md5($dpassword));
+        $query->bindParam(':created_on', date('Y-m-d'));
 
-        // if ($query->execute()) {
-        //     return true;
-        // } else {
-        //     return false;
-        // }
+        if ($query->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }catch (Exception $e) {
+        $this->util->throwError(402, 'Database Error: ' . $e->getMessage());
+    }
+    
     }
     function doPut()
     {

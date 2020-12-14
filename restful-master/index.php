@@ -1,7 +1,7 @@
 <?php 
 require "config.php";
 require "RestFul.php";
-require "core/util/routes.php";
+require "core/routes.php";
 
 
 class App extends RestFul{

@@ -1,7 +1,7 @@
 <?php
 define('DB_USERNAME','root');
 define('DB_PASSWORD','PASS');
-define('DB_NAME','buyandsell');
+define('DB_NAME','api');
 define('DB_SERVER','localhost');
 
 
