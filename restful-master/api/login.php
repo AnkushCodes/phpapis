@@ -12,7 +12,7 @@ class Login
         // $this->Input = $setUtilObj->getInputHandel();
         // $this->uconn = DB::getConnection();
         $this->util =  $setUtilObj;
-        $this->repoAuth = new RepoAuth($this->util);
+        // $this->repoAuth = new RepoAuth();
     }
    
     function doGet()

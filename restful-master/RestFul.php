@@ -1,6 +1,6 @@
 <?php
 require_once "core/utility.php";
-require_once "api/auth/authcontroller.php";
+require_once "core/authcontroller.php";
 require_once "core/auth.php";
 
 class RestFul
@@ -13,45 +13,74 @@ class RestFul
 
     function __construct($routes)
     {
+
+        
+
         $this->Routes = $routes;
-
         $this->RequestURI = Utility::getPathValue($_SERVER['REQUEST_URI']);
-        //  echo(json_encode($this->RequestURI ));
         $this->RequestMethod = $_SERVER['REQUEST_METHOD'];
-
-        // if ($this->RequestURI == "/") {
-        //     foreach ($this->Routes as $key => $Route) {
-        //         echo $key . "<br>";
-        //     }
-        // } else {
-
+       
         $counts = count($this->RequestURI);
+        $utility              = new Utility();
+
+        //content
+        if($_SERVER['CONTENT_TYPE'] !== 'application/json') {
+            $utility->throwError(REQUEST_CONTENTTYPE_NOT_VALID, 'Request content type is not valid');
+        }
+     
+      
+// (
+// [0] =>
+// [1] => index.php
+// [2] => api
+// [3] => product
+// [4] => getproducts
+// )
         if (!($counts  >= 4)) {
             $this->response(array(REQUEST_METHOD_NOT_VALID => "INVALID API"));
-        } else {
+        } 
             $parameter = "/" . $this->RequestURI[2] . "/" . $this->RequestURI[3];
-
-          //
-            if($this->Routes[$parameter] == null){
-                $this->response(array(REQUEST_METHOD_NOT_VALID => "INVALID API5")); exit;
-            }
-            $this->RequestedRoute = $this->Routes[$parameter] ;
             
-            if($this->RequestedRoute['function'] == null){
-                $this->response(array(REQUEST_METHOD_NOT_VALID => "INVALID API6")); exit;
+            //check routes method avilable
+            if ($this->Routes[$parameter] == null) {
+                $this->response(array(REQUEST_METHOD_NOT_VALID => "INVALID API5"));
+                exit;
             }
+            $this->RequestedRoute = $this->Routes[$parameter];
+           
+            //check routes method avilable
+            if ($this->RequestedRoute['function'] == null) {
+                $this->response(array(REQUEST_METHOD_NOT_VALID => "INVALID API6"));
+                exit;
+            }
+            
 
             $ResourceName         = $this->RequestURI[3];
             $tableName            = (string)$this->RequestURI[4];
 
-             if(!in_array($tableName, $this->RequestedRoute['function'])){
+            //route key check
+            if (!array_key_exists($tableName, $this->RequestedRoute['function'])) {
                 $this->response(array(REQUEST_METHOD_NOT_VALID => "INVALID API8"));
-             }
-            $utility              = new Utility();
+                exit;
+            }
+
+            if (!($this->RequestedRoute['function'][$tableName] == $this->RequestMethod)) {
+                $this->response(array("message" => "not allowed request method"));
+            }
+           
+            
+            // if ($this->RequestedRoute['guard'] == true) {
+            //     $authControllre = new AuthController($utility);
+            //     $authControllre->getValidateToken();
+            // }
+
+         
             $utility->setCallFuntion((string)$this->RequestURI[4]);
-            if ($counts == 5 && $this->RequestURI[5] != null) {
+
+            if ($counts == 6 && $this->RequestURI[5] != null) {
                 $utility->setId((int) $this->RequestURI[5]);
             }
+
             // }
 
 
@@ -95,10 +124,11 @@ class RestFul
                     break;
             }
         }
-    }
+    
 
     function response($data)
     {
-        echo json_encode(array("status" => 200, "data" => $data));
+        
+        echo json_encode(array("status" => 100, "data" => $data));
     }
 }

@@ -1,5 +1,5 @@
 <?php
-require_once "core/token/JWT.php";
+require_once "core/package/token/JWT.php";
 class Auth
 {
     // private $aData;

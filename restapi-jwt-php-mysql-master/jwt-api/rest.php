@@ -24,6 +24,7 @@
 		}
 
 		Public function validateRequest() {
+			//:todo done
 			if($_SERVER['CONTENT_TYPE'] !== 'application/json') {
 				$this->throwError(REQUEST_CONTENTTYPE_NOT_VALID, 'Request content type is not valid');
 			}

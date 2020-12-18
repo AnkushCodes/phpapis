@@ -10,7 +10,7 @@ class Utility
 	{
 		parse_str(file_get_contents("php://input"), $_PUT);
 		$this->Input['GET']     = $_GET;
-		$this->Input['POST']    = $_POST;
+		$this->Input['FORM']    = $_POST;
 		$this->Input['PUT']     = $_PUT;
 		$this->Input['FILES']   = $_FILES;
 		$handler = fopen('php://input', 'r');
@@ -41,7 +41,10 @@ class Utility
 
 	public function setCallFuntion(String $setfun)
 	{
+	
+
 		$this->Input['fcall'] = $setfun;
+		
 	}
 	public function getCallFuntion()
 	{
