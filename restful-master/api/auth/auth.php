@@ -1,44 +1,38 @@
 <?php
-
 require_once "database/DB.php";
-require_once "api/product/repository/ProductRepo.php";
-class Product
+require_once "api/auth/repository/authrepo.php";
+class Auth
 {
-
     private $util;
-    private $productRepo;
+    private $repoAuth;
     function __construct(Utility $setUtilObj)
     {
-       $this->productRepo = new ProductRepo($setUtilObj);
-
-        $this->util = $setUtilObj;
+       $this->repoAuth = new AuthRepo($setUtilObj);
+       $this->util = $setUtilObj;
     }
 
     function doGet()
     {
-        $calls = $this->util->getCallFuntion();
-     
-        $this->productRepo->$calls();
+        $calls = $this->util->getCallFuntion();     
+        $this->repoAuth->$calls();
         exit;
     }
     function doPost()
     {
         $calls = $this->util->getCallFuntion();
-        $this->productRepo->$calls();
+        $this->repoAuth->$calls();
         exit;
     }
     function doPut()
     {
         $calls = $this->util->getCallFuntion();
-
-        $this->productRepo->$calls();
+        $this->repoAuth->$calls();
         exit;
     }
     function doDelete()
     {
         $calls = $this->util->getCallFuntion();
-
-        $this->productRepo->$calls();
+        $this->repoAuth->$calls();
         exit;
     }
 }

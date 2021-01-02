@@ -3,7 +3,7 @@ class user extends PDO{
     
     function __construct($data){
         $this->Input = $data->Input;
-        parent::__construct(_DNS_, _USER_, _PASS_);
+        // parent::__construct(_DNS_, _USER_, _PASS_);
     }
     function doGet(){
        $state = "SELECT * FROM `users` ";
@@ -16,7 +16,7 @@ class user extends PDO{
     }
     function doPut(){
          
-        return $this->Input['PUT']['username'];
+        return $this->Input['PUT']['name'];
     }
     function doDelete(){
         return "Do Delete";

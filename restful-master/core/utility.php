@@ -5,13 +5,16 @@ require_once "constant/constants.php";
 class Utility
 {
 	public $Input;
+	public $userId;
 
 	public function __construct()
 	{
+
 		parse_str(file_get_contents("php://input"), $_PUT);
+		$this->Input['PUT']     = $_PUT;
 		$this->Input['GET']     = $_GET;
 		$this->Input['FORM']    = $_POST;
-		$this->Input['PUT']     = $_PUT;
+		echo json_encode($this->Input['GET']);
 		$this->Input['FILES']   = $_FILES;
 		$handler = fopen('php://input', 'r');
 		$request = stream_get_contents($handler);
@@ -29,9 +32,14 @@ class Utility
 		return $uri;
 	}
 
-	public function setId(int $setId)
+	public function setId()
 	{
-		$this->Input['Id'] = $setId;
+		$this->Input['id'] = $this->Input['GET']['id'];
+	}
+
+	public function getId()
+	{
+		return $this->Input['id'];
 	}
 
 	public function getInputHandel()
@@ -41,16 +49,23 @@ class Utility
 
 	public function setCallFuntion(String $setfun)
 	{
-	
-
 		$this->Input['fcall'] = $setfun;
-		
 	}
+
 	public function getCallFuntion()
 	{
 		return $this->Input['fcall'];
 	}
 
+	public function setuserId(int $setUserId)
+	{
+		$this->userId = $setUserId;
+	}
+
+	public function getuserId()
+	{
+		return $this->userId;
+	}
 
 	public function throwError($code, $message)
 	{

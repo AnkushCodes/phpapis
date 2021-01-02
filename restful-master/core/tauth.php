@@ -1,6 +1,6 @@
 <?php
 require_once "core/package/token/JWT.php";
-class Auth
+class tAuth
 {
     // private $aData;
     private $utilObj;

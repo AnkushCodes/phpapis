@@ -2,23 +2,21 @@
 
 class Routes{
 
-//  static public funtion is(){
-
-//  }   
 
 static public function getRoutes()
 {
     // $Routes =
     return array(
-        "/api/login" => array(
-            "get" => false,
-            "post" => false,
-            "put" => false,
-            "delete" => false,
-            "resource" => "api/auth/login",
+        "/api/auth" => array(
+            "get" => true,
+            "post" => true,
+            "put" => true,
+            "delete" => true,
+            "resource" => "api/auth/auth",
             "function"=>array(
-                "signup"=>"GET",
-                "gettoken"
+                "signup"=>"POST",
+                "login"=>"POST",
+                "gettoken"=>"POST"
             ),
             "gurd"=>false
         ),
@@ -29,7 +27,11 @@ static public function getRoutes()
             "delete" => true,
             "resource" => "api/product/product",
             "function"=>array(
-                "getproducts"=>"GET"              
+                "addproduct"=>"POST",
+                "getproduct"=>"GET",
+                "getproducts"=>"GET",
+                "updateproduct"=>"PUT",
+                "deleteproducts"=>"DELETE"            
             ),
             "gurd"=>true
         ),

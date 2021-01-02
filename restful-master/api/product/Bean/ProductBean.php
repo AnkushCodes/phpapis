@@ -53,8 +53,9 @@ class ProductBean
     public function getProduct()
     {
         $sql = "select * from product where id=:id";
+      
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':id', $this->getId());
         $stmt->execute();
         $product = $stmt->fetch(PDO::FETCH_ASSOC);
         return $product;
@@ -70,33 +71,38 @@ class ProductBean
 
     public function insert()
     {
+        
         $sql = 'insert into product' . '(name,qty,date) values(:name,:qty,:date)';
+        
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':name', $this->name);
-        $stmt->bindParam(':qty', $this->qty);
-        $stmt->bindParam(':date', $this->date);
+        $stmt->bindParam(':name', $this->getName());
+        $stmt->bindParam(':qty', $this->getQty());
+        $stmt->bindParam(':date', $this->getDate());
         if ($stmt->execute()) {
             return true;
         } else {
             return false;
         }
+  
     }
 
     public function update()
     {
-        $sql = "update product set";
+        $sql = "UPDATE product SET ";
         if (null != $this->getName()) {
-            $sql .= "name='" . $this->getName() . "'";
+            $sql .= " name= '" . $this->getName() . "',";
         }
         if (null != $this->getQty()) {
-            $sql .= "qty='" . $this->getQty() . "'";
+            $sql .= " qty= " . $this->getQty() . ",";
         }
-        if (null != $this->getDate()) {
-            $sql .= "date='" . $this->getDate() . "'";
-        }
-        $sql = " where id=:id";
+        // if (null != $this->getDate()) {
+        //     $sql .= " date= " . $this->getDate() . "";
+        // }
+        $sql .= " date = :date WHERE id = :id";
+       
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id', $this->getId());
+        $stmt->bindParam(':date', $this->date);
+        $stmt->bindParam(':id', $this->id);
         if ($stmt->execute()) {
             return true;
         } else {
@@ -106,8 +112,8 @@ class ProductBean
 
     public function delete()
     {
-        $stmt = $this->db->prepare('delete from product where =:id');
-        $stmt->bindparam(':id', $this->id);
+        $stmt = $this->db->prepare('delete from product WHERE id=:id');
+        $stmt->bindParam(':id', $this->id);
         if ($stmt->execute()) {
             return true;
         } else {
